@@ -12,3 +12,5 @@ export 'src/lru_cache.dart';
 export 'src/navigator_obs.dart';
 export 'src/quit_container.dart';
 export 'src/stream_widget.dart';
+export 'src/sp.dart';
+export 'src/theme_widget.dart';
