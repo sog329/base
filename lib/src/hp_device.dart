@@ -1,8 +1,8 @@
 import 'dart:math';
 
-import 'package:anim_studio/base/hp_platform.dart';
-import 'package:anim_studio/base/hp_thread.dart';
-import 'package:anim_studio/base/navigator_obs.dart';
+import 'package:base/src/hp_platform.dart';
+import 'package:base/src/hp_thread.dart';
+import 'package:base/src/navigator_obs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';

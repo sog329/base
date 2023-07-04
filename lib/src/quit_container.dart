@@ -1,5 +1,4 @@
-import 'package:anim_studio/app/base/config.dart';
-import 'package:anim_studio/base/hp_device.dart';
+import 'package:base/src/hp_device.dart';
 import 'package:flutter/cupertino.dart';
 
 class QuitContainer extends WillPopScope {
@@ -14,7 +13,7 @@ class QuitContainer extends WillPopScope {
             DateTime now = DateTime.now();
             if (_preTime == null || (now.difference(_preTime!) > _duration)) {
               _preTime = now;
-              HpDevice.toast(Config.exit);
+              HpDevice.toast('Quit?');
               return false;
             }
             HpDevice.toast(null);

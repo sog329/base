@@ -1,6 +1,6 @@
-import 'package:anim_studio/base/hp_device.dart';
-import 'package:anim_studio/base/hp_file.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:base/src/hp_device.dart';
+import 'package:base/src/hp_file.dart';
 
 class HpAudio {
   HpAudio._();

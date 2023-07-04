@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:isolate';
 
-import 'package:anim_studio/base/hp_platform.dart';
+import 'package:base/src/hp_platform.dart';
 import 'package:async/async.dart';
 import 'package:flutter/foundation.dart';
 

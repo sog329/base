@@ -1,4 +1,4 @@
-import 'package:anim_studio/base/lru_cache.dart';
+import 'package:base/src/lru_cache.dart';
 import 'package:flutter/foundation.dart';
 
 class ConfigLruCache {

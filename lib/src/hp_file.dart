@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' hide decodeImageFromList;
 
-import 'package:anim_studio/base/config_lru_cache.dart';
-import 'package:anim_studio/base/hp_device.dart';
-import 'package:anim_studio/base/hp_platform.dart';
+import 'package:base/src/config_lru_cache.dart';
+import 'package:base/src/hp_device.dart';
+import 'package:base/src/hp_platform.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';

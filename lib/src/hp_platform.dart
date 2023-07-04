@@ -1,7 +1,7 @@
 // import 'dart:io' if (dart.library.html) 'dart:html';
 import 'dart:io' as io;
 
-import 'package:anim_studio/base/hp_device.dart';
+import 'package:base/src/hp_device.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:file_picker/file_picker.dart';

@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:anim_studio/base/hp_device.dart';
+import 'package:base/src/hp_device.dart';
 
 import 'lru_cache.dart';
 

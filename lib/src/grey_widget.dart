@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:anim_studio/base/stream_widget.dart';
+import 'package:base/src/stream_widget.dart';
 import 'package:flutter/material.dart';
 
 class GreyWidget extends StreamWidget<bool> {
