@@ -12,13 +12,11 @@ import 'package:permission_handler/permission_handler.dart';
 class HpDevice {
   HpDevice._();
 
-  static double screenWidth(BuildContext c, [double? p]) {
-    return _percent(MediaQuery.of(c).size.width, p);
-  }
+  static double screenWidth(BuildContext c, [double? p]) => _percent(MediaQuery.of(c).size.width, p);
 
-  static double screenHeight(BuildContext c, [double? p]) {
-    return _percent(MediaQuery.of(c).size.height, p);
-  }
+  static double screenHeight(BuildContext c, [double? p]) => _percent(MediaQuery.of(c).size.height, p);
+
+  static double pixelRatio(BuildContext c) => MediaQuery.of(c).devicePixelRatio;
 
   static double screenMin(BuildContext c, [double? p]) {
     Size s = MediaQuery.of(c).size;
