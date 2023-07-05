@@ -63,16 +63,43 @@ class NavigatorObs extends NavigatorObserver {
         ),
       );
 
-  static push2(BuildContext ctx, Widget page, {String? args}) {
+  static pushAlpha(
+    BuildContext ctx,
+    Widget page, {
+    String? args,
+    void Function(double p)? onEnter,
+    void Function(double p)? onBack,
+  }) {
     return Navigator.push(
       ctx,
       PageRouteBuilder(
           settings: rs(page.runtimeType.toString(), args: args),
           pageBuilder: (_, __, ___) => page,
-          transitionsBuilder: (_, front, back, child) {
+          transitionsBuilder: (_, anim, __, child) {
+            if (onEnter != null && onBack != null) {
+              bool enter = true;
+              anim.addStatusListener(
+                (status) {
+                  if (status == AnimationStatus.reverse) {
+                    enter = false;
+                  } else if (status == AnimationStatus.forward) {
+                    enter = true;
+                  }
+                },
+              );
+              anim.addListener(
+                () {
+                  if (enter) {
+                    onEnter.call(anim.value);
+                  } else {
+                    onBack.call(anim.value);
+                  }
+                },
+              );
+            }
             return FadeTransition(
               opacity: Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
-                parent: front,
+                parent: anim,
                 curve: Curves.fastOutSlowIn,
               )),
               child: child,
