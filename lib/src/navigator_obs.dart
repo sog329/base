@@ -63,6 +63,24 @@ class NavigatorObs extends NavigatorObserver {
         ),
       );
 
+  static push2(BuildContext ctx, Widget page, {String? args}) {
+    return Navigator.push(
+      ctx,
+      PageRouteBuilder(
+          settings: rs(page.runtimeType.toString(), args: args),
+          pageBuilder: (_, __, ___) => page,
+          transitionsBuilder: (_, front, back, child) {
+            return FadeTransition(
+              opacity: Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
+                parent: front,
+                curve: Curves.fastOutSlowIn,
+              )),
+              child: child,
+            );
+          }),
+    );
+  }
+
   static String _name(bool dlg, String name) => dlg ? '$_dlg$name' : '$_page$name';
 
   static RouteSettings rs(String name, {String? args, dlg = false}) => RouteSettings(
