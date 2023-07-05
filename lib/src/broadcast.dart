@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:base/base.dart';
+
 class Broadcast<T> {
   final StreamController<T> _ctrl = StreamController.broadcast();
   late T _value;
@@ -20,16 +22,51 @@ class Broadcast<T> {
 
 class Percent extends Broadcast<double> {
   final double space;
+  Timer? _timer;
+  int? _startTime;
 
   Percent(super.value, {this.space = .05});
 
-  @override
-  void add(double t) {
+  void anim(double t, {required int ms, int? times}) {
+    _stopTimer();
+    times = (space > 0 ? 1 ~/ space : 100);
+    _startTime = HpDevice.time();
+    double from = value();
+    double delta = t - from;
+    _timer = Timer.periodic(
+      Duration(milliseconds: ms ~/ times),
+      (_) {
+        double percent = (HpDevice.time() - _startTime!) / ms;
+        if (percent >= 1) {
+          percent = 1;
+          _stopTimer();
+        }
+        double v = from + delta * percent;
+        super.add(_format(v));
+      },
+    );
+  }
+
+  void _stopTimer() {
+    if (_timer != null) {
+      _timer!.cancel();
+      _timer = null;
+      _startTime = null;
+    }
+  }
+
+  double _format(double t) {
     if (space > 0) {
       int n = t ~/ space;
       double d = t - n * space;
       t = (n + (d >= space / 2 ? 1 : 0)) * space;
     }
-    super.add(t);
+    return t;
+  }
+
+  @override
+  void add(double t) {
+    _stopTimer();
+    super.add(_format(t));
   }
 }
