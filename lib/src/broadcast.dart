@@ -76,12 +76,14 @@ class Percent extends Broadcast<double> {
 class PercentWidget extends StreamWidget<double> {
   PercentWidget({
     super.key,
+    double Function(double d)? convert,
     required Percent percent,
     required Widget Function(BuildContext ctx, double p, Widget? child) builder,
     Widget? child,
   }) : super(
-          initialData: percent.value(),
-          stream: percent.stream().distinct(),
-          builder: (ctx, _, child) => builder.call(ctx, percent.value(), child),
+          initialData: convert == null ? percent.value() : convert(percent.value()),
+          stream:
+              convert == null ? percent.stream().distinct() : percent.stream().map((d) => convert.call(d)).distinct(),
+          builder: (ctx, snap, __) => builder.call(ctx, snap.data!, child),
         );
 }
