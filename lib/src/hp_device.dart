@@ -48,8 +48,9 @@ class HpDevice {
         Fluttertoast.showToast(msg: s);
       }
     } else {
-      if (s != null) {
-        snackBar(NavigatorObs.ctx(), s);
+      BuildContext? ctx = NavigatorObs.ctx();
+      if (s != null && ctx != null) {
+        snackBar(ctx, s);
       }
     }
   }

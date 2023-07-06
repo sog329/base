@@ -7,7 +7,7 @@ class NavigatorObs extends NavigatorObserver {
 
   factory NavigatorObs.obs() => _navi;
 
-  static BuildContext ctx() => _navi.navigator!.context;
+  static BuildContext? ctx() => _navi.navigator?.context;
 
   static final List<RouteSettings> _lst = [];
 
