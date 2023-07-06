@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:base/base.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class Broadcast<T> {
   final StreamController<T> _ctrl = StreamController.broadcast();
@@ -69,4 +71,17 @@ class Percent extends Broadcast<double> {
     _stopTimer();
     super.add(_format(t));
   }
+}
+
+class PercentWidget extends StreamWidget<double> {
+  PercentWidget({
+    super.key,
+    required Percent percent,
+    required Widget Function(BuildContext ctx, double p, Widget? child) builder,
+    Widget? child,
+  }) : super(
+          initialData: percent.value(),
+          stream: percent.stream().distinct(),
+          builder: (ctx, _, child) => builder.call(ctx, percent.value(), child),
+        );
 }
