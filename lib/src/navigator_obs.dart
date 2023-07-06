@@ -101,6 +101,7 @@ class NavigatorObs extends NavigatorObserver {
                 opacity: Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
                   parent: anim,
                   curve: Curves.fastOutSlowIn,
+                  reverseCurve: Curves.fastOutSlowIn.flipped,
                 )),
                 child: child,
               );
