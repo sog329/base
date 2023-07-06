@@ -7,13 +7,13 @@ import 'package:flutter/material.dart';
 class ThemeWidget extends StreamWidget<ThemeData> {
   ThemeWidget({
     super.key,
-    required Widget Function(Widget? child) builder,
+    required Widget Function(BuildContext ctx, Widget? child) builder,
     Widget? child,
   }) : super(
           stream: ThemeProvider._ctrl.stream,
           child: child,
           initialData: ThemeProvider.data(),
-          builder: (c, s, child) => builder.call(child),
+          builder: (c, s, child) => builder.call(c, child),
         );
 }
 
