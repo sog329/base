@@ -29,7 +29,9 @@ class Percent extends Broadcast<double> {
 
   Percent(super.value, {this.space = .05});
 
-  void anim(double t, {required int ms, int? times}) {
+  bool inAnim() => _timer != null;
+
+  void anim(double t, {required int ms, int? times, Curve curve = Curves.linear}) {
     _stopTimer();
     times = (space > 0 ? 1 ~/ space : 100);
     _startTime = HpDevice.time();
@@ -39,11 +41,11 @@ class Percent extends Broadcast<double> {
       Duration(milliseconds: ms ~/ times),
       (_) {
         double percent = (HpDevice.time() - _startTime!) / ms;
-        if (percent >= 1) {
+        if (percent >= 1 || percent < 0) {
           percent = 1;
           _stopTimer();
         }
-        double v = from + delta * percent;
+        double v = from + delta * curve.transform(percent);
         super.add(_format(v));
       },
     );
