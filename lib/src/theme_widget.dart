@@ -30,6 +30,10 @@ class ThemeProvider {
           brightness: dark ? Brightness.dark : Brightness.light,
           backgroundColor: dark ? Colors.black : Colors.white,
         ),
+        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          selectedItemColor: map[colorName]!,
+          unselectedItemColor: (dark ? Colors.white : Colors.black).withOpacity(.5),
+        ),
       );
 
   static void change({bool? dark, String? colorName, int? ratio}) {
