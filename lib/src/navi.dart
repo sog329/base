@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class NaviObs extends NavigatorObserver {
-  NaviObs._();
+class Navi extends NavigatorObserver {
+  Navi._();
 
-  static final NaviObs _navi = NaviObs._();
+  static final Navi _navi = Navi._();
 
-  factory NaviObs.obs() => _navi;
+  factory Navi.obs() => _navi;
 
   static BuildContext? ctx() => _navi.navigator?.context;
 
