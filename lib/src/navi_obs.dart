@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class NavigatorObs extends NavigatorObserver {
-  NavigatorObs._();
+class NaviObs extends NavigatorObserver {
+  NaviObs._();
 
-  static final NavigatorObs _navi = NavigatorObs._();
+  static final NaviObs _navi = NaviObs._();
 
-  factory NavigatorObs.obs() => _navi;
+  factory NaviObs.obs() => _navi;
 
   static BuildContext? ctx() => _navi.navigator?.context;
 
@@ -55,7 +55,9 @@ class NavigatorObs extends NavigatorObserver {
     _lst.remove(route.settings);
   }
 
-  static push(BuildContext ctx, Widget page, {String? args}) => Navigator.push(
+  static void pop<T extends Object?>(BuildContext c, [T? result]) => Navigator.of(c).pop(result);
+
+  static Future<T?> push<T extends Object?>(BuildContext ctx, Widget page, {String? args}) => Navigator.push(
         ctx,
         MaterialPageRoute(
           settings: rs(page.runtimeType.toString(), args: args),
@@ -63,7 +65,7 @@ class NavigatorObs extends NavigatorObserver {
         ),
       );
 
-  static pushAlpha(
+  static Future<T?> pushAlpha<T extends Object?>(
     BuildContext ctx,
     Widget page, {
     String? args,

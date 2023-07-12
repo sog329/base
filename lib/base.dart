@@ -9,7 +9,7 @@ export 'src/hp_platform.dart';
 export 'src/hp_thread.dart';
 export 'src/image_lru_cache.dart';
 export 'src/lru_cache.dart';
-export 'src/navigator_obs.dart';
+export 'src/navi_obs.dart';
 export 'src/quit_container.dart';
 export 'src/stream_widget.dart';
 export 'src/sp.dart';

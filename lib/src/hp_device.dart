@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:base/src/hp_platform.dart';
 import 'package:base/src/hp_thread.dart';
-import 'package:base/src/navigator_obs.dart';
+import 'package:base/src/navi_obs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -48,7 +48,7 @@ class HpDevice {
         Fluttertoast.showToast(msg: s);
       }
     } else {
-      BuildContext? ctx = NavigatorObs.ctx();
+      BuildContext? ctx = NaviObs.ctx();
       if (s != null && ctx != null) {
         snackBar(ctx, s);
       }
