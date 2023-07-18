@@ -147,11 +147,11 @@ class HpFile {
     );
   }
 
-  static Future<Directory?> appDirectory() {
+  static Future<Directory?> appDirectory([String? sdFolderName]) {
     if (HpPlatform.isWeb()) {
       return Future.value(null);
-    } else if (HpPlatform.isAndroid()) {
-      return Future.value(Directory('/sdcard/anim_studio'));
+    } else if (HpPlatform.isAndroid() && sdFolderName != null) {
+      return Future.value(Directory('/sdcard/$sdFolderName'));
     } else {
       return getApplicationDocumentsDirectory();
     }
