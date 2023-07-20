@@ -4,6 +4,7 @@ import 'dart:isolate';
 import 'package:base/src/hp_platform.dart';
 import 'package:async/async.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 class HpThread {
   HpThread._();
@@ -26,4 +27,6 @@ class HpThread {
         f,
         onCancel: onCancel,
       );
+
+  static void post(VoidCallback fun) => WidgetsBinding.instance.addPostFrameCallback((_) => fun.call());
 }
