@@ -100,4 +100,6 @@ class HpDevice {
       return Future.value(true);
     }
   }
+
+  static void hideInput(BuildContext c)=> FocusScope.of(c).unfocus();
 }
