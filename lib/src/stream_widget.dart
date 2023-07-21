@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 
 class StreamWidget<T> extends StreamBuilder<T> {
