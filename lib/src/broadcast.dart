@@ -5,10 +5,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Broadcast<T> {
-  final StreamController<T> _ctrl = StreamController.broadcast();
+  late final StreamController<T> _ctrl;
   late T _value;
 
-  Broadcast(this._value) {
+  Broadcast(
+    this._value, {
+    VoidCallback? onListen,
+    VoidCallback? onCancel,
+  }) {
+    _ctrl = StreamController.broadcast(
+      onListen: onListen,
+      onCancel: onCancel,
+    );
     add(_value);
   }
 
@@ -27,7 +35,12 @@ class Percent extends Broadcast<double> {
   Timer? _timer;
   int? _startTime;
 
-  Percent(super.value, {this.space = .05});
+  Percent(
+    super.value, {
+    this.space = .05,
+    super.onListen,
+    super.onCancel,
+  });
 
   bool inAnim() => _timer != null;
 
