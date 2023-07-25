@@ -14,7 +14,7 @@ dependencies:
   vector_math: ^2.1.4
   path_provider:
   fluttertoast:
-  audioplayers: ^4.0.1 # 音频
+  audioplayers: ^4.1.0 # 音频
   audioplayers_darwin: ^4.0.1 # 音频 mac依赖
   intl: ^0.18.1 # 时间格式
   dio: ^5.2.0+1 # dio 下载
