@@ -1,18 +1,18 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' hide decodeImageFromList;
+import 'dart:ui' as ui;
 
-import 'package:base/src/config_lru_cache.dart';
-import 'package:base/src/hp_device.dart';
-import 'package:base/src/hp_platform.dart';
+import 'package:base/base.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
-import 'image_lru_cache.dart';
-
 class HpFile {
+  static Cache<String, Uint8List>? byteCache;
+  static Cache<String, ui.Image>? imgCache;
+
   HpFile._();
 
   static bool inAssets(String path) {
@@ -25,7 +25,7 @@ class HpFile {
     bool Function(T? t)? need,
     bool useCache = false,
   }) {
-    Uint8List? r = useCache ? ConfigLruCache.get(path) : null;
+    Uint8List? r = useCache ? byteCache?.get(path) : null;
     if (r != null) {
       return Future.value(r);
     } else {
@@ -52,7 +52,7 @@ class HpFile {
       return future.then(
         (v) {
           if (v != null && useCache) {
-            ConfigLruCache.put(path, v); // 此处是cache中没有获取到的值
+            byteCache?.put(path, v); // 此处是cache中没有获取到的值
           }
           return Future.value(v);
         },
@@ -66,7 +66,7 @@ class HpFile {
     bool Function(T? t)? need,
     bool useCache = false,
   }) {
-    Image? img = useCache ? ImageLruCache.get(path) : null;
+    Image? img = useCache ? imgCache?.get(path) : null;
     if (img != null) {
       return Future.value(img);
     } else {
@@ -86,7 +86,7 @@ class HpFile {
               return decodeImageFromList(lst).then(
                 (img) {
                   if (useCache) {
-                    ImageLruCache.put(path, img);
+                    imgCache?.put(path, img);
                   }
                   return Future.value(img);
                 },
@@ -222,8 +222,7 @@ class HpFile {
     );
   }
 
-  static Future<File> tinyPic(String path, Uint8List buf) => Dio()
-          .post(
+  static Future<File> tinyPic(String path, Uint8List buf) => Net.post(
         'https://api.tinify.com/shrink',
         options: Options(
           contentType: 'image/png',
@@ -233,8 +232,7 @@ class HpFile {
           },
         ),
         data: Stream.fromIterable(buf.map((e) => [e])),
-      )
-          .then(
+      ).then(
         (response) {
           if (response.statusCode == HttpStatus.created) {
             return download(

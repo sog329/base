@@ -1,6 +1,6 @@
 import 'dart:collection';
 
-class LruCache<K, V> {
+class LruCache<K, V> extends Cache {
   final LinkedHashMap<K, V> _map = LinkedHashMap<K, V>(); // 等同于{}，即Map默认为LinkedHashMap
   final int max;
   final String name;
@@ -8,7 +8,8 @@ class LruCache<K, V> {
   LruCache(this.name, this.max);
 
   // in main thread
-  V? get(K k) {
+  @override
+  get(k) {
     V? v = _map.remove(k);
     if (v != null) {
       _map[k] = v;
@@ -17,7 +18,8 @@ class LruCache<K, V> {
   }
 
   // in main thread
-  void put(K k, V v) {
+  @override
+  put(k, v) {
     while (_map.length >= max) {
       _map.remove(_map.keys.first);
     }
@@ -26,4 +28,10 @@ class LruCache<K, V> {
   }
 
   Iterable<V> values() => _map.values;
+}
+
+abstract class Cache<K, V> {
+  void put(K k, V v);
+
+  V? get(K k);
 }
