@@ -185,14 +185,12 @@ class HpFile {
     required String path,
     ProgressCallback? progress,
   }) =>
-      Dio()
-          .get(url,
-              onReceiveProgress: progress,
-              options: Options(
-                responseType: ResponseType.bytes,
-                followRedirects: false,
-              ))
-          .then(
+      Net.get(url,
+          onReceiveProgress: progress,
+          options: Options(
+            responseType: ResponseType.bytes,
+            followRedirects: false,
+          )).then(
         (response) {
           if (response.data != null) {
             return createFile(path).then((file) => file.writeAsBytes(response.data));
@@ -221,27 +219,4 @@ class HpFile {
       ),
     );
   }
-
-  static Future<File> tinyPic(String path, Uint8List buf) => Net.post(
-        'https://api.tinify.com/shrink',
-        options: Options(
-          contentType: 'image/png',
-          headers: {
-            'Accept': 'application/json',
-            'Authorization': 'Basic ${base64Encode(utf8.encode('j2Sytf0RW43dp0TCzfFfL998wPsPK9md'))}',
-          },
-        ),
-        data: Stream.fromIterable(buf.map((e) => [e])),
-      ).then(
-        (response) {
-          if (response.statusCode == HttpStatus.created) {
-            return download(
-              url: jsonDecode(response.toString())['output']['url'],
-              path: path,
-            );
-          } else {
-            throw HpDevice.exp(response.toString());
-          }
-        },
-      );
 }
