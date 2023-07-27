@@ -1,6 +1,9 @@
+import 'package:base/base.dart';
 import 'package:flutter/material.dart';
 
 class Navi extends NavigatorObserver {
+  static final Broadcast<bool> _appResumed = Broadcast(true);
+
   Navi._();
 
   static final Navi _navi = Navi._();
@@ -16,7 +19,7 @@ class Navi extends NavigatorObserver {
 
   static bool hasDlg(bool dlg, [String? s]) {
     bool result = false;
-    if (_lst.last != null) {
+    if (_lst.isNotEmpty) {
       String? name = _lst.last.name;
       if (name != null) {
         result = name.startsWith(_dlg);
@@ -116,4 +119,9 @@ class Navi extends NavigatorObserver {
         name: _name(dlg, name),
         arguments: args,
       );
+
+  static void didChangeAppLifecycleState(AppLifecycleState state) =>
+      _appResumed.add(state == AppLifecycleState.resumed);
+
+  static Stream<bool> get resumed => _appResumed.stream();
 }
