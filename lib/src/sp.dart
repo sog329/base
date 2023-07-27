@@ -26,4 +26,6 @@ class Sp {
   static void setBaseRatio(int n) => _sp.setInt('theme_scale', n);
 
   static int getBaseRatio() => _sp.getInt('theme_scale') ?? 12;
+
+  static Future<void> clear() => _sp.clear();
 }
