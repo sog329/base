@@ -2,9 +2,19 @@ import 'package:base/base.dart';
 import 'package:base/src/hp_str.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Sp {
-  Sp._();
+class Sp<V> {
+  final String k;
+  final V d;
 
+  Sp(this.k, this.d);
+
+  V get() => _get<V>(k) ?? d;
+
+  Future<bool> set(V v) => _set<V>(k, v);
+
+  Future<bool> remove() => _sp.remove(k);
+
+  // static
   static late SharedPreferences _sp;
 
   static Future init() => SharedPreferences.getInstance().then(
@@ -14,35 +24,12 @@ class Sp {
         },
       );
 
-  static void setThemeDark(bool b) => _sp.setBool('theme_dark', b);
-
-  static bool getThemeDark() => _sp.getBool('theme_dark') ?? true;
-
-  static void setThemeColorName(String n) => _sp.setString('theme_color_name', n);
-
-  static String getThemeColorName() => _sp.getString('theme_color_name') ?? ThemeProvider.map.keys.first;
-
-  static void setBaseRatio(int n) => _sp.setInt('theme_scale', n);
-
-  static int getBaseRatio() => _sp.getInt('theme_scale') ?? 12;
-
-  static T? get<T>(String k) {
-    switch (T.runtimeType) {
-      case int:
-        return _sp.getInt(k) as T?;
-      case double:
-        return _sp.getDouble(k) as T?;
-      case bool:
-        return _sp.getBool(k) as T?;
-      case String:
-        return _sp.getString(k) as T?;
-      default:
-        HpDevice.log('Sp.get(): unknownType=${T.runtimeType}');
-        return null;
-    }
+  static T? _get<T>(String k) {
+    Object? v = _sp.get(k);
+    return v != null && v is T ? v as T : null;
   }
 
-  static Future<bool> set<T>(String k, T v) {
+  static Future<bool> _set<T>(String k, T v) {
     late Future<bool> fail = Future.value(false);
     switch (T.runtimeType) {
       case int:
@@ -57,11 +44,22 @@ class Sp {
         if (kb <= 10) {
           return _sp.setString(k, s);
         } else {
-          HpDevice.log('Sp.set(): String.kb=$kb, too large to save');
+          HpDevice.log('Sp.set($k): String.kb=$kb, too large to save');
           return fail;
         }
+      case const (List<String>):
+        List<String> lst = v as List<String>;
+        double kb = 0;
+        for (String s in lst) {
+          kb += HpStr.kb(s);
+          if (kb > 10) {
+            HpDevice.log('Sp.set($k): List<String>.kb=$kb, too large to save');
+            return fail;
+          }
+        }
+        return _sp.setStringList(k, lst);
       default:
-        HpDevice.log('Sp.set(): unknownType=${T.runtimeType}');
+        HpDevice.log('Sp.set($k): unknownType=${T.runtimeType}');
         return fail;
     }
   }

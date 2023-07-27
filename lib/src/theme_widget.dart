@@ -18,7 +18,11 @@ class ThemeWidget extends StreamWidget<ThemeData> {
 }
 
 class ThemeProvider {
-  static ThemeData _data = _build(Sp.getThemeDark(), Sp.getThemeColorName()); // sp获取
+  static final Sp<bool> _spDark = Sp('theme_dark', true);
+  static final Sp<String> _spColorName = Sp('theme_color_name', ThemeProvider.map.keys.first);
+  static final Sp<int> _spScale = Sp('theme_scale', 12);
+
+  static ThemeData _data = _build(_spDark.get(), _spColorName.get()); // sp获取
   static final StreamController<ThemeData> _ctrl = StreamController.broadcast();
 
   ThemeProvider._();
@@ -46,13 +50,13 @@ class ThemeProvider {
       dark = dark ?? d;
       colorName = colorName ?? n;
       _data = _build(dark, colorName);
-      Sp.setThemeDark(dark);
-      Sp.setThemeColorName(colorName);
+      _spDark.set(dark);
+      _spColorName.set(colorName);
     }
     // ratio
-    if (ratio != null && ratio != Sp.getBaseRatio()) {
+    if (ratio != null && ratio != _spScale.get()) {
       change = true;
-      Sp.setBaseRatio(ratio);
+      _spScale.set(ratio);
     }
     // notif
     if (change) {
