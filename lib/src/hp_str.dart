@@ -1,7 +1,9 @@
+import 'package:intl/intl.dart';
+
 class HpStr {
   HpStr._();
 
-  // 存储Kb
+  /// 存储Kb
   static double kb(String s) => s.codeUnits.length / 1024;
 
   /// 异或加密

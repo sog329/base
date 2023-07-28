@@ -28,9 +28,9 @@ class HpDevice {
   static int time() => DateTime.now().millisecondsSinceEpoch;
 
   static void log(String s) {
+    // if (kDebugMode) {
     DateTime now = DateTime.now();
     s = '${DateFormat('HH:mm:ss').format(now)}.${now.millisecond..toStringAsFixed(3)}[${HpThread.current()}]:$s';
-    // if (kDebugMode) {
     print(s);
     // }
   }
@@ -101,5 +101,5 @@ class HpDevice {
     }
   }
 
-  static void hideInput(BuildContext c)=> FocusScope.of(c).unfocus();
+  static void hideInput(BuildContext c) => FocusScope.of(c).unfocus();
 }

@@ -6,15 +6,20 @@ import 'package:flutter/foundation.dart';
 class Net {
   Net._();
 
-  static final Dio _dio = Dio()
-    ..interceptors.addAll(kDebugMode ? [LogInterceptor()] : [])
-    ..options = BaseOptions(
-      connectTimeout: const Duration(seconds: 5),
-      receiveTimeout: const Duration(seconds: 3),
-    )
-    ..transformer = SyncTransformer(
-      jsonDecodeCallback: (s) => compute(jsonDecode, s),
-    );
+  static late final Dio _dio;
+
+  static void init({
+    List<Interceptor>? interceptors,
+  }) =>
+      _dio = Dio()
+        ..interceptors.addAll(interceptors ?? [])
+        ..options = BaseOptions(
+          connectTimeout: const Duration(seconds: 5),
+          receiveTimeout: const Duration(seconds: 3),
+        )
+        ..transformer = SyncTransformer(
+          jsonDecodeCallback: (s) => compute(jsonDecode, s),
+        );
 
   static Future<Response<T>> post<T>(
     String path, {
