@@ -16,7 +16,15 @@ class HpFile {
   HpFile._();
 
   static bool inAssets(String path) {
-    return !path.startsWith('/');
+    return !inLocal(path) && !inNet(path);
+  }
+
+  static bool inLocal(String path) {
+    return path.startsWith('/');
+  }
+
+  static bool inNet(String path) {
+    return path.startsWith('http');
   }
 
   static Future<Uint8List?> unit8<T>({
