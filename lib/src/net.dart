@@ -14,8 +14,8 @@ class Net {
       _dio = Dio()
         ..interceptors.addAll(interceptors ?? [])
         ..options = BaseOptions(
-          connectTimeout: const Duration(seconds: 5),
-          receiveTimeout: const Duration(seconds: 3),
+          connectTimeout: const Duration(seconds: 10),
+          receiveTimeout: const Duration(seconds: 10),
         )
         ..transformer = SyncTransformer(
           jsonDecodeCallback: (s) => compute(jsonDecode, s),
