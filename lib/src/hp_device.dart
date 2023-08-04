@@ -17,7 +17,7 @@ class HpDevice {
   static double screenHeight(BuildContext c, [double? p]) => _percent(MediaQuery.of(c).size.height, p);
 
   static double screenSizeToPixel(BuildContext c, double d) =>
-      d * MediaQuery.of(c).devicePixelRatio * (HpPlatform.isMac() ? 2 : 1);
+      d * MediaQuery.of(c).devicePixelRatio * (HpPlatform.isMac() ? 1.5 : 1);
 
   static double screenMin(BuildContext c, [double? p]) {
     Size s = MediaQuery.of(c).size;
