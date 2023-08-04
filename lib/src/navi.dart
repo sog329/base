@@ -60,58 +60,93 @@ class Navi extends NavigatorObserver {
 
   static void pop<T extends Object?>(BuildContext c, [T? result]) => Navigator.of(c).pop(result);
 
-  static Future<T?> push<T extends Object?>(BuildContext ctx, Widget page, {String? args}) => Navigator.push(
-        ctx,
-        MaterialPageRoute(
-          settings: rs(page.runtimeType.toString(), args: args),
-          builder: (_) => page,
-        ),
-      );
-
-  static Future<T?> pushAlpha<T extends Object?>(
+  static Future<T?> push<T extends Object?>(
     BuildContext ctx,
     Widget page, {
     String? args,
     void Function(double p)? onEnter,
     void Function(double p)? onBack,
+    bool alpha = false,
   }) =>
       Navigator.push(
         ctx,
-        PageRouteBuilder(
-            settings: rs(page.runtimeType.toString(), args: args),
-            pageBuilder: (_, __, ___) => page,
-            transitionsBuilder: (_, anim, __, child) {
-              if (onEnter != null || onBack != null) {
-                bool enter = true;
-                anim.addStatusListener(
-                  (status) {
-                    if (status == AnimationStatus.reverse) {
-                      enter = false;
-                    } else if (status == AnimationStatus.forward) {
-                      enter = true;
-                    }
-                  },
-                );
-                anim.addListener(
-                  () {
-                    if (enter) {
-                      onEnter?.call(anim.value);
-                    } else {
-                      onBack?.call(anim.value);
-                    }
-                  },
-                );
-              }
-              return FadeTransition(
-                opacity: Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
-                  parent: anim,
-                  curve: Curves.fastOutSlowIn,
-                  reverseCurve: Curves.fastOutSlowIn.flipped,
-                )),
-                child: child,
-              );
-            }),
+        _pageRoute(
+          page,
+          args: args,
+          onEnter: onEnter,
+          onBack: onBack,
+          alpha: alpha,
+        ),
       );
+
+  static Future<T?> pushReplacement<T extends Object?>(
+    BuildContext ctx,
+    Widget page, {
+    String? args,
+    void Function(double p)? onEnter,
+    void Function(double p)? onBack,
+    bool alpha = false,
+  }) =>
+      Navigator.pushReplacement(
+        ctx,
+        _pageRoute(
+          page,
+          args: args,
+          onEnter: onEnter,
+          onBack: onBack,
+          alpha: alpha,
+        ),
+      );
+
+  static PageRoute<T> _pageRoute<T>(
+    Widget page, {
+    String? args,
+    void Function(double p)? onEnter,
+    void Function(double p)? onBack,
+    bool alpha = false,
+  }) {
+    if (alpha) {
+      return PageRouteBuilder(
+          settings: rs(page.runtimeType.toString(), args: args),
+          pageBuilder: (_, __, ___) => page,
+          transitionsBuilder: (_, anim, __, child) {
+            if (onEnter != null || onBack != null) {
+              bool enter = true;
+              anim.addStatusListener(
+                (status) {
+                  if (status == AnimationStatus.reverse) {
+                    enter = false;
+                  } else if (status == AnimationStatus.forward) {
+                    enter = true;
+                  }
+                },
+              );
+              anim.addListener(
+                () {
+                  if (enter) {
+                    onEnter?.call(anim.value);
+                  } else {
+                    onBack?.call(anim.value);
+                  }
+                },
+              );
+            }
+            return FadeTransition(
+              opacity: Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
+                parent: anim,
+                curve: Curves.fastOutSlowIn,
+                reverseCurve: Curves.fastOutSlowIn.flipped,
+              )),
+              child: child,
+            );
+          });
+    } else {
+      return MaterialPageRoute(
+        settings: rs(page.runtimeType.toString(), args: args),
+        builder: (_) => page,
+      );
+    }
+  }
 
   static String _name(bool dlg, String name) => dlg ? '$_dlg$name' : '$_page$name';
 
