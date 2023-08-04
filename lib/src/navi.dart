@@ -79,6 +79,27 @@ class Navi extends NavigatorObserver {
         ),
       );
 
+  static Future<T?> pushAndRemoveUntil<T extends Object?>(
+    BuildContext ctx,
+    Widget page, {
+    String? args,
+    void Function(double p)? onEnter,
+    void Function(double p)? onBack,
+    bool alpha = false,
+    RoutePredicate? predicate,
+  }) =>
+      Navigator.pushAndRemoveUntil(
+        ctx,
+        _pageRoute(
+          page,
+          args: args,
+          onEnter: onEnter,
+          onBack: onBack,
+          alpha: alpha,
+        ),
+        predicate ?? (route) => false,
+      );
+
   static Future<T?> pushReplacement<T extends Object?>(
     BuildContext ctx,
     Widget page, {
