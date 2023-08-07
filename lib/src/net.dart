@@ -24,6 +24,7 @@ class Net {
         ..interceptors.addAll(interceptors ?? [])
         ..options = BaseOptions(
           connectTimeout: const Duration(seconds: 10),
+          sendTimeout: const Duration(seconds: 10),
           receiveTimeout: const Duration(seconds: 10),
         )
         ..transformer = SyncTransformer(
