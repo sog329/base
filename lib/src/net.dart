@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
 
+import 'package:base/base.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
@@ -7,6 +9,21 @@ class Net {
   Net._();
 
   static late final Dio _dio;
+
+  static CancelToken _cancel = CancelToken();
+
+  // todo https://vimsky.com/examples/usage/dart-async-Future-catchError-da.html
+  // todo https://github.com/cfug/dio/blob/main/dio/README-ZH.md
+  static final Function _onError = (err) {
+    if(CancelToken.isCancel(err)){
+      HpDevice.log('s');
+    }
+  };
+
+  static void logout() {
+    _cancel.cancel();
+    _cancel = CancelToken();
+  }
 
   static void init({
     List<Interceptor>? interceptors,
@@ -26,16 +43,15 @@ class Net {
     Object? data,
     Map<String, dynamic>? queryParameters,
     Options? options,
-    CancelToken? cancelToken,
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) =>
-      _dio.post(
+      _dio.post<T>(
         path,
         data: data,
         queryParameters: queryParameters,
         options: options,
-        cancelToken: cancelToken,
+        cancelToken: _cancel,
         onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress,
       );
@@ -45,15 +61,16 @@ class Net {
     Object? data,
     Map<String, dynamic>? queryParameters,
     Options? options,
-    CancelToken? cancelToken,
     ProgressCallback? onReceiveProgress,
   }) =>
-      _dio.get(
-        path,
-        data: data,
-        queryParameters: queryParameters,
-        options: options,
-        cancelToken: cancelToken,
-        onReceiveProgress: onReceiveProgress,
-      );
+      _dio
+          .get<T>(
+            path,
+            data: data,
+            queryParameters: queryParameters,
+            options: options,
+            cancelToken: _cancel,
+            onReceiveProgress: onReceiveProgress,
+          )
+          .catchError(_onError);
 }
