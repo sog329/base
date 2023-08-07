@@ -12,14 +12,6 @@ class Net {
 
   static CancelToken _cancel = CancelToken();
 
-  // todo https://vimsky.com/examples/usage/dart-async-Future-catchError-da.html
-  // todo https://github.com/cfug/dio/blob/main/dio/README-ZH.md
-  static final Function _onError = (err) {
-    if(CancelToken.isCancel(err)){
-      HpDevice.log('s');
-    }
-  };
-
   static void logout() {
     _cancel.cancel();
     _cancel = CancelToken();
@@ -45,13 +37,14 @@ class Net {
     Options? options,
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
+    CancelToken? cancelToken,
   }) =>
       _dio.post<T>(
         path,
         data: data,
         queryParameters: queryParameters,
         options: options,
-        cancelToken: _cancel,
+        cancelToken: cancelToken ?? _cancel,
         onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress,
       );
@@ -62,15 +55,14 @@ class Net {
     Map<String, dynamic>? queryParameters,
     Options? options,
     ProgressCallback? onReceiveProgress,
+    CancelToken? cancelToken,
   }) =>
-      _dio
-          .get<T>(
-            path,
-            data: data,
-            queryParameters: queryParameters,
-            options: options,
-            cancelToken: _cancel,
-            onReceiveProgress: onReceiveProgress,
-          )
-          .catchError(_onError);
+      _dio.get<T>(
+        path,
+        data: data,
+        queryParameters: queryParameters,
+        options: options,
+        cancelToken: cancelToken ?? _cancel,
+        onReceiveProgress: onReceiveProgress,
+      );
 }
