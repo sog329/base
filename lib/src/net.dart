@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:base/base.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
@@ -12,24 +13,33 @@ class Net {
 
   static CancelToken _cancel = CancelToken();
 
+  static final Broadcast<ConnectivityResult> _connectCtrl = Broadcast(ConnectivityResult.none);
+
   static void logout() {
     _cancel.cancel();
     _cancel = CancelToken();
   }
 
-  static void init({
+  static Future<void> init({
     List<Interceptor>? interceptors,
-  }) =>
-      _dio = Dio()
-        ..interceptors.addAll(interceptors ?? [])
-        ..options = BaseOptions(
-          connectTimeout: const Duration(seconds: 10),
-          sendTimeout: const Duration(seconds: 10),
-          receiveTimeout: const Duration(seconds: 10),
-        )
-        ..transformer = SyncTransformer(
-          jsonDecodeCallback: (s) => compute(jsonDecode, s),
-        );
+  }) async {
+    // http
+    _dio = Dio()
+      ..interceptors.addAll(interceptors ?? [])
+      ..options = BaseOptions(
+        connectTimeout: const Duration(seconds: 10),
+        sendTimeout: const Duration(seconds: 10),
+        receiveTimeout: const Duration(seconds: 10),
+      )
+      ..transformer = SyncTransformer(
+        jsonDecodeCallback: (s) => compute(jsonDecode, s),
+      );
+    // connect
+    Connectivity c = Connectivity();
+    ConnectivityResult r = await c.checkConnectivity();
+    _connectCtrl.add(r);
+    c.onConnectivityChanged.listen((r) => _connectCtrl.add(r));
+  }
 
   static Future<Response<T>> post<T>(
     String path, {
@@ -66,4 +76,8 @@ class Net {
         cancelToken: cancelToken ?? _cancel,
         onReceiveProgress: onReceiveProgress,
       );
+
+  Stream<ConnectivityResult> connect() => _connectCtrl.stream().distinct();
+
+  ConnectivityResult connectivity() => _connectCtrl.value();
 }
